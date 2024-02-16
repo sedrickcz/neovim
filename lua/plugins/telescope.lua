@@ -12,6 +12,10 @@ return {
           ["ui-select"] = {
             require("telescope.themes").get_dropdown({}),
           },
+          package_info = {
+            -- Optional theme (the extension doesn't set a default theme)
+            theme = "ivy",
+        },
         },
       })
       local builtin = require("telescope.builtin")
@@ -31,6 +35,7 @@ return {
         end)
         vim.keymap.set('n', '<leader>vh', builtin.help_tags, {})
       require("telescope").load_extension("ui-select")
+      require("telescope").load_extension("package_info")
     end,
   },
 }
