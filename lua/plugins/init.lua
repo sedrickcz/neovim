@@ -1,9 +1,8 @@
 return {
+--    "github/copilot.vim",
+--  "supermaven-inc/supermaven-nvim",
+--  config = function()
+--    require("supermaven-nvim").setup({})
+--  end,
+  }
 
-    {
-        "nvim-lua/plenary.nvim",
-        name = "plenary"
-    },
-
-    "github/copilot.vim",
-}

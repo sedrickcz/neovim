@@ -1,135 +1,209 @@
---return {
---  {
---    "williamboman/mason.nvim",
---    lazy = false,
---    config = function()
---      require("mason").setup()
---    end,
---  },
---}
---
-
 return {
-  "neovim/nvim-lspconfig",
-  dependencies = {
-    "williamboman/mason.nvim",
-    "williamboman/mason-lspconfig.nvim",
-    "hrsh7th/cmp-nvim-lsp",
-    "hrsh7th/cmp-buffer",
-    "hrsh7th/cmp-path",
-    "hrsh7th/cmp-cmdline",
-    "hrsh7th/nvim-cmp",
-    "L3MON4D3/LuaSnip",
-    "saadparwaiz1/cmp_luasnip",
-    "j-hui/fidget.nvim",
-  },
+	{
+		"williamboman/mason.nvim",
+		lazy = false,
+		config = function()
+			require("mason").setup()
+		end,
+	},
+	{
+		"williamboman/mason-lspconfig.nvim",
+		lazy = false,
+		opts = {
+			auto_install = true,
+		},
+		config = function()
+			require("mason-lspconfig").setup({
+				ensure_installed = {
+					"ts_ls",
+					"html",
+					"cssls",
+					"tailwindcss",
+					"lua_ls",
+					"emmet_ls",
+					"volar",
+					"docker_compose_language_service",
+					"dockerls",
+					"biome",
+					"ruff",
+					-- "mypy",
+					"pyright",
+				},
+			})
+		end,
+	},
+	{
+		"neovim/nvim-lspconfig",
+		lazy = false,
+		config = function()
+			local lspconfig = require("lspconfig")
+			local mason_lspconfig = require("mason-lspconfig")
+			local cmp_nvim_lsp = require("cmp_nvim_lsp")
 
-  config = function()
-    local cmp = require("cmp")
-    local cmp_lsp = require("cmp_nvim_lsp")
-    local capabilities = vim.tbl_deep_extend(
-      "force",
-      {},
-      vim.lsp.protocol.make_client_capabilities(),
-      cmp_lsp.default_capabilities()
-    )
+			-- Set up capabilities for cmp-nvim-lsp
+			local capabilities = cmp_nvim_lsp.default_capabilities()
 
-    require("fidget").setup({})
-    require("mason").setup()
-    require("mason-lspconfig").setup({
-      ensure_installed = {
-        "lua_ls",
-        "tsserver",
-        "volar",
-      },
-      handlers = {
-        function(server_name) -- default handler (optional)
-          require("lspconfig")[server_name].setup({
-            capabilities = capabilities,
-          })
-        end,
+			-- Automatically set up LSP servers installed via mason-lspconfig
+			mason_lspconfig.setup_handlers({
+				function(server_name)
+					lspconfig[server_name].setup({
+						capabilities = capabilities,
+					})
+				end,
+				["emmet_ls"] = function()
+					-- configure emmet language server
+					lspconfig["emmet_ls"].setup({
+						capabilities = capabilities,
+						filetypes = {
+							"html",
+							"typescriptreact",
+							"javascriptreact",
+							"css",
+							"sass",
+							"scss",
+							"less",
+							"vue",
+							"svelte",
+						},
+					})
+				end,
+				["pyright"] = function()
+					-- configure emmet language server
+					lspconfig["pyright"].setup({
+						capabilities = capabilities,
+						on_attach = function(client, bufnr)
+							-- Set up keybindings for code actions, if needed
+							vim.api.nvim_buf_set_keymap(
+								bufnr,
+								"n",
+								"<leader>ca",
+								"<cmd>lua vim.lsp.buf.code_action()<CR>",
+								{ noremap = true, silent = true }
+							)
+						end,
+						filetypes = { "python" },
+					})
+				end,
+				["lua_ls"] = function()
+					-- configure lua server (with special settings)
+					lspconfig["lua_ls"].setup({
+						capabilities = capabilities,
+						settings = {
+							Lua = {
+								-- make the language server recognize "vim" global
+								diagnostics = {
+									globals = { "vim" },
+								},
+								completion = {
+									callSnippet = "Replace",
+								},
+							},
+						},
+					})
+				end,
+				["volar"] = function()
+					require("lspconfig").volar.setup({
+						-- NOTE: Uncomment to enable volar in file types other than vue.
+						-- (Similar to Takeover Mode)
+						-- IMPORTANT: Make sure tsserver has a tsserver.config.json and tsserver.json file for your project!
+						-- filetypes = { "vue", "javascript", "typescript", "javascriptreact", "typescriptreact", "json" },
 
-        ["tsserver"] = function()
-          local mason_registry = require('mason-registry')
-          local vue_language_server_path = mason_registry.get_package('vue-language-server'):get_install_path() .. '/node_modules/@vue/language-server'
-          local lspconfig = require("lspconfig")
-          lspconfig.tsserver.setup {
-             init_options = {
-              plugins = {
-                {
-                  name = '@vue/typescript-plugin',
-                  location = vue_language_server_path,
-                  languages = { 'vue' },
-                },
-              },
-            },
-            filetypes = { 'typescript', 'javascript', 'javascriptreact', 'typescriptreact', 'vue' },
-          }
+						-- NOTE: Uncomment to restrict Volar to only Vue/Nuxt projects. This will enable Volar to work alongside other language servers (tsserver).
 
-          lspconfig.volar.setup{}
-        end,
+						-- root_dir = require("lspconfig").util.root_pattern(
+						--   "vue.config.js",
+						--   "vue.config.ts",
+						--   "nuxt.config.js",
+						--   "nuxt.config.ts"
+						-- ),
+						init_options = {
+							vue = {
+								hybridMode = false,
+							},
+							-- NOTE: This might not be needed. Uncomment if you encounter issues.
 
-        ["lua_ls"] = function()
-          local lspconfig = require("lspconfig")
-          lspconfig.lua_ls.setup({
-            capabilities = capabilities,
-            settings = {
-              Lua = {
-                diagnostics = {
-                  globals = { "vim", "it", "describe", "before_each", "after_each" },
-                },
-              },
-            },
-          })
-        end,
-      },
-    })
+							typescript = {
+								tsdk = vim.fn.getcwd() .. "/node_modules/typescript/lib",
+							},
+						},
+						settings = {
+							typescript = {
+								inlayHints = {
+									enumMemberValues = {
+										enabled = true,
+									},
+									functionLikeReturnTypes = {
+										enabled = true,
+									},
+									propertyDeclarationTypes = {
+										enabled = true,
+									},
+									parameterTypes = {
+										enabled = true,
+										suppressWhenArgumentMatchesName = true,
+									},
+									variableTypes = {
+										enabled = true,
+									},
+								},
+							},
+						},
+					})
+				end,
+				["ts_ls"] = function()
+					local mason_packages = vim.fn.stdpath("data") .. "/mason/packages"
+					local volar_path = mason_packages .. "/vue-language-server/node_modules/@vue/language-server"
 
-    local cmp_select = { behavior = cmp.SelectBehavior.Select }
+					require("lspconfig").ts_ls.setup({
+						-- NOTE: To enable hybridMode, change HybrideMode to true above and uncomment the following filetypes block.
 
-    cmp.setup({
-      snippet = {
-        expand = function(args)
-          require("luasnip").lsp_expand(args.body) -- For `luasnip` users.
-        end,
-      },
-      mapping = cmp.mapping.preset.insert({
-        ["<C-p>"] = cmp.mapping.select_prev_item(cmp_select),
-        ["<C-n>"] = cmp.mapping.select_next_item(cmp_select),
-        ["<Enter>"] = cmp.mapping.confirm({ select = true }),
-        ["<C-Space>"] = cmp.mapping.complete(),
-      }),
-      sources = cmp.config.sources({
-        { name = "nvim_lsp" },
-        { name = "luasnip" }, -- For luasnip users.
-      }, {
-        { name = "buffer" },
-      }),
-    })
+						-- filetypes = { "typescript", "javascript", "javascriptreact", "typescriptreact", "vue" },
+						init_options = {
+							plugins = {
+								{
+									name = "@vue/typescript-plugin",
+									location = volar_path,
+									languages = { "vue" },
+								},
+							},
+						},
+						settings = {
+							typescript = {
+								inlayHints = {
+									includeInlayParameterNameHints = "all",
+									includeInlayParameterNameHintsWhenArgumentMatchesName = true,
+									includeInlayFunctionParameterTypeHints = true,
+									includeInlayVariableTypeHints = true,
+									includeInlayVariableTypeHintsWhenTypeMatchesName = true,
+									includeInlayPropertyDeclarationTypeHints = true,
+									includeInlayFunctionLikeReturnTypeHints = true,
+									includeInlayEnumMemberValueHints = true,
+								},
+							},
+						},
+					})
+				end,
+			})
 
-    vim.keymap.set("n", "K", vim.lsp.buf.hover, {})
-    vim.keymap.set("n", "<leader>gd", vim.lsp.buf.definition, {})
-    vim.keymap.set("n", "<leader>gr", vim.lsp.buf.references, {})
-    vim.keymap.set("n", "<leader>gi", vim.lsp.buf.implementation, {})
-    vim.keymap.set("n", "<leader>gt", vim.lsp.buf.type_definition, {})
-    vim.keymap.set("n", "<leader>gs", vim.lsp.buf.signature_help, {})
-    vim.keymap.set("n", "<leader>gw", vim.lsp.buf.document_symbol, {})
-    vim.keymap.set("n", "<leader>gW", vim.lsp.buf.workspace_symbol, {})
-    vim.keymap.set("n", "<leader>ca", vim.lsp.buf.code_action, {})
-    vim.keymap.set("n", "<leader>e", vim.diagnostic.open_float)
-    vim.keymap.set("n", "[d", vim.diagnostic.goto_prev)
-    vim.keymap.set("n", "]d", vim.diagnostic.goto_next)
-    vim.keymap.set("n", "<leader>q", vim.diagnostic.setloclist)
-    vim.diagnostic.config({
-      -- update_in_insert = true,
-      float = {
-        focusable = false,
-        style = "minimal",
-        border = "rounded",
-        source = "always",
-        header = "",
-        prefix = "",
-      },
-    })
-  end,
+			-- Global keybindings and autocommands
+			vim.api.nvim_create_autocmd("LspAttach", {
+				group = vim.api.nvim_create_augroup("UserLspConfig", {}),
+				callback = function(ev)
+					local map = function(keys, func, desc)
+						vim.keymap.set("n", keys, func, { buffer = ev.buf, desc = "LSP: " .. desc })
+					end
+
+					map("gd", require("telescope.builtin").lsp_definitions, "[G]oto [D]efinition")
+					map("gr", require("telescope.builtin").lsp_references, "[G]oto [R]eferences")
+					vim.keymap.set("n", "<leader>k", vim.lsp.buf.hover, {})
+          vim.keymap.set("n", "<leader>e", vim.diagnostic.open_float)
+					vim.keymap.set("n", "<leader>gr", vim.lsp.buf.references, {})
+					vim.keymap.set("n", "<leader>ca", vim.lsp.buf.code_action, {})
+          vim.keymap.set("n", "[d", vim.diagnostic.goto_prev)
+          vim.keymap.set("n", "]d", vim.diagnostic.goto_next)
+          vim.keymap.set("n", "<leader>q", vim.diagnostic.setloclist)
+				end,
+			})
+		end,
+	},
 }
