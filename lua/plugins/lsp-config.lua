@@ -16,18 +16,9 @@ return {
 			require("mason-lspconfig").setup({
 				ensure_installed = {
 					"ts_ls",
-					"html",
-					"cssls",
 					"tailwindcss",
 					"lua_ls",
-					"emmet_ls",
 					"volar",
-					"docker_compose_language_service",
-					"dockerls",
-					"biome",
-					"ruff",
-					-- "mypy",
-					"pyright",
 				},
 			})
 		end,
@@ -48,40 +39,6 @@ return {
 				function(server_name)
 					lspconfig[server_name].setup({
 						capabilities = capabilities,
-					})
-				end,
-				["emmet_ls"] = function()
-					-- configure emmet language server
-					lspconfig["emmet_ls"].setup({
-						capabilities = capabilities,
-						filetypes = {
-							"html",
-							"typescriptreact",
-							"javascriptreact",
-							"css",
-							"sass",
-							"scss",
-							"less",
-							"vue",
-							"svelte",
-						},
-					})
-				end,
-				["pyright"] = function()
-					-- configure emmet language server
-					lspconfig["pyright"].setup({
-						capabilities = capabilities,
-						on_attach = function(client, bufnr)
-							-- Set up keybindings for code actions, if needed
-							vim.api.nvim_buf_set_keymap(
-								bufnr,
-								"n",
-								"<leader>ca",
-								"<cmd>lua vim.lsp.buf.code_action()<CR>",
-								{ noremap = true, silent = true }
-							)
-						end,
-						filetypes = { "python" },
 					})
 				end,
 				["lua_ls"] = function()
