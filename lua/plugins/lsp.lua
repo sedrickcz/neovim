@@ -9,6 +9,34 @@ return {
         "shellcheck",
         "shfmt",
         "flake8",
+        "tailwindcss-language-server",
+      },
+    },
+  },
+
+  -- Tailwind CSS LSP configuration
+  {
+    "neovim/nvim-lspconfig",
+    ft = { "html", "css", "scss", "javascript", "typescript", "javascriptreact", "typescriptreact", "vue", "svelte" },
+    opts = {
+      servers = {
+        tailwindcss = {
+          settings = {
+            tailwindCSS = {
+              classAttributes = { "class", "className", "classList", "ngClass" },
+              lint = {
+                cssConflict = "warning",
+                invalidApply = "error",
+                invalidConfigPath = "error",
+                invalidScreen = "error",
+                invalidTailwindDirective = "error",
+                invalidVariant = "error",
+                recommendedVariantOrder = "warning",
+              },
+              validate = true,
+            },
+          },
+        },
       },
     },
   },
