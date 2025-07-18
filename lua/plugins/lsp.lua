@@ -12,6 +12,7 @@ return {
         "tailwindcss-language-server",
         "eslint-lsp",
         "prettier",
+        "vtsls",
       },
     },
   },
@@ -69,6 +70,67 @@ return {
               mode = "location",
             },
           },
+        },
+        -- vtsls (Vue TypeScript Language Server)
+        vtsls = {
+          filetypes = {
+            "javascript",
+            "javascriptreact",
+            "javascript.jsx",
+            "typescript",
+            "typescriptreact",
+            "typescript.tsx",
+            "vue",
+          },
+          settings = {
+            complete_function_calls = true,
+            vtsls = {
+              enableMoveToFileCodeAction = true,
+              autoUseWorkspaceTsdk = true,
+              experimental = {
+                completion = {
+                  enableServerSideFuzzyMatch = true,
+                },
+              },
+            },
+            typescript = {
+              updateImportsOnFileMove = { enabled = "always" },
+              suggest = {
+                completeFunctionCalls = true,
+              },
+              inlayHints = {
+                enumMemberValues = { enabled = true },
+                functionLikeReturnTypes = { enabled = true },
+                parameterNames = { enabled = "literals" },
+                parameterTypes = { enabled = true },
+                propertyDeclarationTypes = { enabled = true },
+                variableTypes = { enabled = false },
+              },
+              preferences = {
+                includePackageJsonAutoImports = "auto",
+              },
+            },
+            javascript = {
+              updateImportsOnFileMove = { enabled = "always" },
+              suggest = {
+                completeFunctionCalls = true,
+              },
+              inlayHints = {
+                enumMemberValues = { enabled = true },
+                functionLikeReturnTypes = { enabled = true },
+                parameterNames = { enabled = "literals" },
+                parameterTypes = { enabled = true },
+                propertyDeclarationTypes = { enabled = true },
+                variableTypes = { enabled = false },
+              },
+              preferences = {
+                includePackageJsonAutoImports = "auto",
+              },
+            },
+          },
+          on_attach = function(client, bufnr)
+            client.server_capabilities.documentHighlightProvider = false
+          end,
         },
       },
     },
