@@ -13,6 +13,7 @@ return {
         "eslint-lsp",
         "prettier",
         "vtsls",
+        "vue-language-server",
       },
     },
   },
@@ -23,6 +24,9 @@ return {
     ft = { "html", "css", "scss", "javascript", "typescript", "javascriptreact", "typescriptreact", "vue", "svelte", "json", "jsonc" },
     opts = {
       servers = {
+        -- Disable vue_ls since we're using vtsls with Vue plugin
+        vue_ls = false,
+        volar = false,
         -- Tailwind CSS LSP
         tailwindcss = {
           settings = {
@@ -76,10 +80,8 @@ return {
           filetypes = {
             "javascript",
             "javascriptreact",
-            "javascript.jsx",
             "typescript",
             "typescriptreact",
-            "typescript.tsx",
             "vue",
           },
           settings = {
@@ -90,6 +92,18 @@ return {
               experimental = {
                 completion = {
                   enableServerSideFuzzyMatch = true,
+                },
+              },
+              tsserver = {
+                globalPlugins = {
+                  {
+                    configNamespace = "typescript",
+                    enableForWorkspaceTypeScriptVersions = true,
+                    languages = { "vue" },
+                    location = vim.fn.stdpath("data")
+                      .. "/mason/packages/vue-language-server/node_modules/@vue/language-server",
+                    name = "@vue/typescript-plugin",
+                  },
                 },
               },
             },
@@ -132,6 +146,14 @@ return {
             client.server_capabilities.documentHighlightProvider = false
           end,
         },
+      },
+      setup = {
+        vue_ls = function()
+          return true -- Skip vue_ls setup
+        end,
+        volar = function()
+          return true -- Skip volar setup
+        end,
       },
     },
   },
