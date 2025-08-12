@@ -16,10 +16,18 @@ This is a Neovim configuration based on LazyVim, a modern Neovim distribution. T
 - Inside Neovim: `:Lazy sync` - Sync plugins (install/update/clean)
 - Inside Neovim: `:Lazy clean` - Remove unused plugins
 - Inside Neovim: `:Lazy update` - Update plugins
+- Inside Neovim: `:Lazy reload` - Reload plugin configurations after changes
 
 ### LSP and Development Tools
 - Inside Neovim: `:Mason` - Open Mason package manager for LSP servers, formatters, and linters
 - Inside Neovim: `:checkhealth` - Check health of Neovim and plugins
+- Inside Neovim: `<leader>tt` - Toggle package-info display for package.json files
+
+### Auto-installed Tools
+Mason automatically installs these tools:
+- **Formatters**: stylua, prettier, shfmt
+- **Linters**: eslint-lsp, flake8, shellcheck
+- **Language Servers**: vtsls (TypeScript/Vue), vue-language-server, tailwindcss-language-server
 
 ## Architecture
 
@@ -31,6 +39,9 @@ This is a Neovim configuration based on LazyVim, a modern Neovim distribution. T
   - `keymaps.lua` - Custom keymaps (currently empty, inherits LazyVim defaults)
   - `autocmds.lua` - Auto commands (currently empty, inherits LazyVim defaults)
 - `lua/plugins/` - Plugin specifications and overrides
+  - `catppuccin.lua` - Catppuccin colorscheme with transparency settings
+  - `lsp.lua` - LSP configurations for web development (Mason, vtsls, ESLint, Prettier)
+  - `package-info.lua` - Package.json dependency version display for Node.js projects
   - `example.lua` - Example plugin configurations (currently disabled)
 
 ### Plugin Management Philosophy
@@ -47,8 +58,21 @@ The configuration follows LazyVim's layered approach:
 
 ### Key Configuration Files
 - `lazy-lock.json` - Locks plugin versions for reproducible installs
-- `lazyvim.json` - LazyVim-specific settings
+- `lazyvim.json` - LazyVim-specific settings and enabled extras (Harpoon2, mini-hipatterns)
 - `stylua.toml` - Lua code formatting configuration
+
+### Current LazyVim Extras
+The configuration includes these LazyVim extras:
+- `lazyvim.plugins.extras.editor.harpoon2` - Quick file navigation
+- `lazyvim.plugins.extras.util.mini-hipatterns` - Enhanced pattern highlighting
+
+### Web Development Focus
+This configuration is optimized for web development with:
+- **TypeScript/Vue**: vtsls with Vue plugin support, replacing volar
+- **ESLint**: Configured for real-time linting and code actions
+- **Prettier**: Auto-formatting for JS/TS/Vue/HTML/CSS/JSON files
+- **Tailwind CSS**: Language server with conflict detection and validation
+- **Package Info**: Live package.json dependency version display (`<leader>tt` to toggle)
 
 ## Development Workflow
 
