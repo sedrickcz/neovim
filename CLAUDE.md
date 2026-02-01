@@ -39,9 +39,10 @@ Mason automatically installs these tools:
   - `keymaps.lua` - Custom keymaps (currently empty, inherits LazyVim defaults)
   - `autocmds.lua` - Auto commands (currently empty, inherits LazyVim defaults)
 - `lua/plugins/` - Plugin specifications and overrides
-  - `catppuccin.lua` - Catppuccin colorscheme with transparency settings
+  - `theme.lua` - Everforest colorscheme configuration
   - `lsp.lua` - LSP configurations for web development (Mason, vtsls, ESLint, Prettier)
   - `package-info.lua` - Package.json dependency version display for Node.js projects
+  - `wakatime.lua` - WakaTime time tracking integration
   - `example.lua` - Example plugin configurations (currently disabled)
 
 ### Plugin Management Philosophy
@@ -58,11 +59,13 @@ The configuration follows LazyVim's layered approach:
 
 ### Key Configuration Files
 - `lazy-lock.json` - Locks plugin versions for reproducible installs
-- `lazyvim.json` - LazyVim-specific settings and enabled extras (Harpoon2, mini-hipatterns)
+- `lazyvim.json` - LazyVim-specific settings and enabled extras (Copilot, Harpoon2, mini-hipatterns)
 - `stylua.toml` - Lua code formatting configuration
+- `mise.toml` - Tool version management (Ruby)
 
 ### Current LazyVim Extras
 The configuration includes these LazyVim extras:
+- `lazyvim.plugins.extras.ai.copilot` - GitHub Copilot integration
 - `lazyvim.plugins.extras.editor.harpoon2` - Quick file navigation
 - `lazyvim.plugins.extras.util.mini-hipatterns` - Enhanced pattern highlighting
 

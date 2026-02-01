@@ -6,9 +6,9 @@ return {
     local package_info = require("package-info")
     vim.keymap.set({ "n" }, "<LEADER>tt", package_info.toggle, { silent = true, noremap = true })
     require("package-info").setup({
-      colors = {
-        up_to_date = "#3C4048",
-        outdated = "#FF0000",
+      highlights = {
+        up_to_date = { fg = "#3C4048" },
+        outdated = { fg = "#FF0000" },
       },
       autostart = true,
       hide_up_to_date = true,

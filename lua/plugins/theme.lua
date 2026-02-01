@@ -1,5 +1,73 @@
+--return {
+--  {
+--    "ellisonleao/gruvbox.nvim",
+--    opts = {
+--      transparent_mode = true,
+--      contrast = "hard", -- "soft" | "medium" | "hard"
+--      overrides = {
+--        Normal = { bg = "none" },
+--        NormalNC = { bg = "none" },
+--        SignColumn = { bg = "none" },
+--        Folded = { bg = "none" },
+--        EndOfBuffer = { fg = "#3c3836" }, -- gruvbox dark grey
+--      },
+--    },
+--  },
+--  {
+--    "LazyVim/LazyVim",
+--    opts = {
+--      colorscheme = "gruvbox",
+--    },
+--  },
+--}
+return {
+  "catppuccin/nvim",
+}
 -- return {
---   "catppuccin/nvim",
+--   {
+--     "neanias/everforest-nvim",
+--     config = function()
+--       require("everforest").setup({
+--         transparent_background_level = 2,
+--         italics = true,
+--         disable_italic_comments = false,
+--       })
+--     end,
+--   },
+-- }
+-- return {
+--   "neanias/everforest-nvim",
+--   lazy = false,
+--   priority = 1000,
+--   config = function()
+--     -- Optionally configure and load the colorscheme
+--     -- directly inside the plugin declaration.
+--     vim.g.everforest_enable_italic = true
+--     vim.g.everforest_background = "hard"
+--     vim.g.everforest_better_performance = 1
+--     vim.g.everforest_transparent_background = 2
+--     vim.g.everforest_enable_italic = 1
+--     vim.cmd.colorscheme("everforest")
+--   end,
+-- }
+-- return {
+--   "ribru17/bamboo.nvim",
+--   lazy = false,
+--   priority = 1000,
+--   config = function()
+--     require("bamboo").setup({
+--       style = "multiplex",
+--       transparent = true,
+--       dim_inactive = true,
+--       lualine = {
+--         transparent = true,
+--       },
+--     })
+--     require("bamboo").load()
+--   end,
+-- }
+-- return {
+--   "folke/tokyonight.nvim",
 --   opts = {
 --     transparent = true,
 --     styles = {
@@ -7,23 +75,4 @@
 --       floats = "transparent",
 --     },
 --   },
--- }
-return {
-  { "neanias/everforest-nvim" },
-  {
-    "LazyVim/LazyVim",
-    opts = {
-      colorscheme = "everforest",
-      background = "soft",
-    },
-  },
-}
--- return {
---   "ribru17/bamboo.nvim",
---   lazy = false,
---   priority = 1000,
---   config = function()
---     require("bamboo").setup({})
---     require("bamboo").load()
---   end,
 -- }

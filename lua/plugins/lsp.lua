@@ -1,7 +1,7 @@
 return {
   -- Mason for managing LSP servers, formatters, and linters
   {
-    "williamboman/mason.nvim",
+    "mason-org/mason.nvim",
     version = "v2.0.0",
     opts = {
       ensure_installed = {
@@ -21,7 +21,19 @@ return {
   -- LSP configuration for web development
   {
     "neovim/nvim-lspconfig",
-    ft = { "html", "css", "scss", "javascript", "typescript", "javascriptreact", "typescriptreact", "vue", "svelte", "json", "jsonc" },
+    ft = {
+      "html",
+      "css",
+      "scss",
+      "javascript",
+      "typescript",
+      "javascriptreact",
+      "typescriptreact",
+      "vue",
+      "svelte",
+      "json",
+      "jsonc",
+    },
     opts = {
       servers = {
         -- Disable vue_ls since we're using vtsls with Vue plugin
@@ -161,7 +173,20 @@ return {
   -- Prettier formatting
   {
     "stevearc/conform.nvim",
-    ft = { "html", "css", "scss", "javascript", "typescript", "javascriptreact", "typescriptreact", "vue", "svelte", "json", "jsonc", "markdown" },
+    ft = {
+      "html",
+      "css",
+      "scss",
+      "javascript",
+      "typescript",
+      "javascriptreact",
+      "typescriptreact",
+      "vue",
+      "svelte",
+      "json",
+      "jsonc",
+      "markdown",
+    },
     opts = {
       formatters_by_ft = {
         javascript = { "prettier" },
@@ -180,3 +205,4 @@ return {
     },
   },
 }
+
