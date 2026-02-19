@@ -22,3 +22,37 @@ vim.keymap.set({ "n" }, "<LEADER>ni", require("package-info").install, { silent 
 
 -- Install a different dependency version
 vim.keymap.set({ "n" }, "<LEADER>np", require("package-info").change_version, { silent = true, noremap = true })
+
+local function toggle_inlay_hints()
+  local inlay_hint = vim.lsp.inlay_hint
+  if not inlay_hint then
+    return
+  end
+
+  local bufnr = vim.api.nvim_get_current_buf()
+
+  if type(inlay_hint) == "table" and inlay_hint.enable then
+    local enabled = false
+    if inlay_hint.is_enabled then
+      local ok, value = pcall(inlay_hint.is_enabled, { bufnr = bufnr })
+      if ok then
+        enabled = value
+      else
+        local ok_legacy, legacy_value = pcall(inlay_hint.is_enabled, bufnr)
+        if ok_legacy then
+          enabled = legacy_value
+        end
+      end
+    end
+
+    local ok = pcall(inlay_hint.enable, not enabled, { bufnr = bufnr })
+    if not ok then
+      pcall(inlay_hint.enable, bufnr, not enabled)
+    end
+  elseif type(inlay_hint) == "function" then
+    vim.b.inlay_hints_enabled = not vim.b.inlay_hints_enabled
+    inlay_hint(bufnr, vim.b.inlay_hints_enabled)
+  end
+end
+
+vim.keymap.set("n", "<leader>ti", toggle_inlay_hints, { desc = "Toggle Inlay Hints", silent = true, noremap = true })
